@@ -11,16 +11,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 main()
-    .then(() => {
-        console.log('MONGO CONNECTION OPEN!');
-    })
-    .catch((err) => {
-        console.log('ERROR CONNECTING TO MONGO');
-        console.log(err);
-    });
+  .then(() => {
+    console.log('MONGO CONNECTION OPEN!');
+  })
+  .catch((err) => {
+    console.log('ERROR CONNECTING TO MONGO');
+    console.log(err);
+  });
 
 async function main() {
-    await mongoose.connect('mongodb://localhost:27017/yelp-camp');
+  await mongoose.connect('mongodb://localhost:27017/yelp-camp');
 }
 
 app.engine('ejs', ejsMate);
@@ -28,44 +28,43 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
-    res.render('home');
+  res.render('home');
 });
 app.get('/campgrounds', async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', { campgrounds });
+  const campgrounds = await Campground.find({});
+  res.render('campgrounds/index', { campgrounds });
 });
 app.get('/campgrounds/new', (req, res) => {
-    res.render('campgrounds/new');
+  res.render('campgrounds/new');
 });
 app.post('/campgrounds', async (req, res) => {
-    const campground = await new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
+  const campground = await new Campground(req.body.campground);
+  await campground.save();
+  res.redirect(`/campgrounds/${campground._id}`);
 });
 app.get('/campgrounds/:id', async (req, res) => {
-    const id = req.params.id;
-    const campground = await Campground.findById(id);
-    res.render('campgrounds/show', { campground });
-    console.log(req.params);
+  const id = req.params.id;
+  const campground = await Campground.findById(id);
+  res.render('campgrounds/show', { campground });
 });
 app.get('/campgrounds/:id/edit', async (req, res) => {
-    const id = req.params.id;
-    const campground = await Campground.findById(id);
-    res.render('campgrounds/edit', { campground });
+  const id = req.params.id;
+  const campground = await Campground.findById(id);
+  res.render('campgrounds/edit', { campground });
 });
 app.put('/campgrounds/:id', async (req, res) => {
-    const id = req.params.id;
-    const campground = await Campground.findByIdAndUpdate(id, {
-        ...req.body.campground,
-    });
-    res.redirect(`/campgrounds/${campground._id}`);
+  const id = req.params.id;
+  const campground = await Campground.findByIdAndUpdate(id, {
+    ...req.body.campground,
+  });
+  res.redirect(`/campgrounds/${campground._id}`);
 });
 app.delete('/campgrounds/:id', async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-    res.redirect('/campgrounds');
+  const { id } = req.params;
+  await Campground.findByIdAndDelete(id);
+  res.redirect('/campgrounds');
 });
 
 app.listen(port, () => {
-    console.log(`LISTENING ON PORT ${port}`);
+  console.log(`LISTENING ON PORT ${port}`);
 });
