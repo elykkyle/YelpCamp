@@ -4,12 +4,15 @@ const path = require('path');
 const port = 3000;
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
+const morgan = require('morgan');
 const Campground = require('./models/campground');
 const methodOverride = require('method-override');
 const { findByIdAndUpdate } = require('./models/campground');
 app.use(express.urlencoded({ extended: true }));
 const catchAsync = require('./utils/catchAsync');
+const ExpressError = require('./utils/ExpressError');
 app.use(methodOverride('_method'));
+app.use(morgan('combined'));
 
 main()
   .then(() => {
@@ -44,7 +47,8 @@ app.get('/campgrounds/new', (req, res) => {
 app.post(
   '/campgrounds',
   catchAsync(async (req, res, next) => {
-    const campground = await new Campground(req.body.campground);
+    if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
+    const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
   })
@@ -84,9 +88,14 @@ app.delete(
   })
 );
 
+app.all('*', (req, res, next) => {
+  next(new ExpressError('Page Not Found', 404));
+});
+
 app.use((err, req, res, next) => {
-  console.log(err);
-  res.send('Oh Boy, something went wrong!');
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = 'Oh no, something went wrong!';
+  res.status(statusCode).render('error', { err });
 });
 
 app.listen(port, () => {
