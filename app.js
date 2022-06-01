@@ -1,17 +1,22 @@
 const express = require('express');
-const app = express();
 const path = require('path');
-const port = 3000;
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-// const morgan = require('morgan');
-const methodOverride = require('method-override');
-// const { findByIdAndUpdate } = require('./models/campground');
-app.use(express.urlencoded({ extended: true }));
 const ExpressError = require('./utils/ExpressError');
-const { campgroundSchema, reviewSchema } = require('./schemas');
+const methodOverride = require('method-override');
+
+const port = 3000;
+
+const app = express();
+
+app.engine('ejs', ejsMate);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-// app.use(morgan('combined'));
+app.use(express.static(path.join(__dirname, 'public')));
+
 const campgrounds = require('./routes/campgrounds');
 const reviews = require('./routes/reviews');
 
@@ -30,10 +35,6 @@ main()
 async function main() {
   await mongoose.connect('mongodb://localhost:27017/yelp-camp');
 }
-
-app.engine('ejs', ejsMate);
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
   res.render('home');
