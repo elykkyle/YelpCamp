@@ -49,17 +49,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/fakeUser', async (req, res) => {
-  const user = new User({ email: 'coltttt@gmail.com', username: 'coltttt' });
-  const newUser = await User.register(user, 'chicken');
-  res.send(newUser);
-});
+const userRoutes = require('./routes/users');
+const campgroundRoutes = require('./routes/campgrounds');
+const reviewRoutes = require('./routes/reviews');
 
-const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews');
-
-app.use('/campgrounds', campgrounds);
-app.use('/campgrounds/:id/reviews', reviews);
+app.use('/', userRoutes);
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 main()
   .then(() => {
