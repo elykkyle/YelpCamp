@@ -13,6 +13,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const port = 3000;
 
@@ -38,6 +39,7 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(mongoSanitize());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -50,6 +52,7 @@ app.use((req, res, next) => {
   if (!['/login', '/register', '/'].includes(req.originalUrl)) {
     req.session.returnTo = req.originalUrl;
   }
+  console.log(req.query);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
