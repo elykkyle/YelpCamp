@@ -24,11 +24,13 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 const sessionConfig = {
+  name: 'yelpcamp.session',
   secret: 'thisshouldbeabettersecret!',
   resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
+    // secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 7,
     sameSite: true,
   },
@@ -52,7 +54,6 @@ app.use((req, res, next) => {
   if (!['/login', '/register', '/'].includes(req.originalUrl)) {
     req.session.returnTo = req.originalUrl;
   }
-  console.log(req.query);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
