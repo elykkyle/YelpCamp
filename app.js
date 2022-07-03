@@ -15,6 +15,9 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
+const MongoStore = require('connect-mongo');
+// const dbUrl = process.env.DB_URL;
+const dbUrl = 'mongodb://localhost:27017/yelp-camp';
 
 const port = 3000;
 
@@ -24,8 +27,22 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  stringify: false,
+  touchAfter: 24 * 60 * 60,
+  crypto: {
+    secret: 'F?$5Ir&C35BMuO2rQZz!_LGU@!',
+  },
+});
+
+store.on('error', function (e) {
+  console.log('SESSION STORE ERROR', e);
+});
+
 const sessionConfig = {
   name: 'yelpcamp.session',
+  store,
   secret: 'thisshouldbeabettersecret!',
   resave: false,
   saveUninitialized: true,
@@ -119,7 +136,8 @@ main()
   });
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/yelp-camp');
+  await mongoose.connect(dbUrl);
+  // await mongoose.connect(dbUrl);
 }
 
 app.get('/', (req, res) => {
