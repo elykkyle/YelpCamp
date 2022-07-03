@@ -16,8 +16,7 @@ const User = require('./models/user');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const MongoStore = require('connect-mongo');
-// const dbUrl = process.env.DB_URL;
-const dbUrl = 'mongodb://localhost:27017/yelp-camp';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 
 const port = 3000;
 
@@ -27,12 +26,14 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   stringify: false,
   touchAfter: 24 * 60 * 60,
   crypto: {
-    secret: 'F?$5Ir&C35BMuO2rQZz!_LGU@!',
+    secret,
   },
 });
 
@@ -43,7 +44,7 @@ store.on('error', function (e) {
 const sessionConfig = {
   name: 'yelpcamp.session',
   store,
-  secret: 'thisshouldbeabettersecret!',
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
