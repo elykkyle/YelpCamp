@@ -1,8 +1,13 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const mongoose = require('mongoose');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
 const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+const kyle = process.env.KYLE;
 
 main()
   .then(() => {
@@ -14,7 +19,7 @@ main()
   });
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/yelp-camp');
+  await mongoose.connect(dbUrl);
 }
 
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
@@ -49,7 +54,7 @@ const seedDB = async () => {
         type: 'Point',
         coordinates: [cities[random1000].longitude, cities[random1000].latitude],
       },
-      author: '629ff7dfff6c0371b37e49dd',
+      author: kyle,
     });
     await camp.save();
   }
