@@ -16,7 +16,7 @@ const User = require('./models/user');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const MongoStore = require('connect-mongo');
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+const dbUrl = process.env.DB_URL;
 
 const port = process.env.PORT;
 
@@ -26,7 +26,7 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+const secret = process.env.SECRET;
 
 const store = MongoStore.create({
   mongoUrl: dbUrl,
