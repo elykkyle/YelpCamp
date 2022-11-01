@@ -64,7 +64,12 @@ const scriptSrcUrls = [
   'https://cdn.jsdelivr.net',
 ];
 
-const connectSrcUrls = ['https://api.mapbox.com/', 'https://a.tiles.mapbox.com/', 'https://b.tiles.mapbox.com/', 'https://events.mapbox.com/'];
+const connectSrcUrls = [
+  'https://api.mapbox.com/',
+  'https://a.tiles.mapbox.com/',
+  'https://b.tiles.mapbox.com/',
+  'https://events.mapbox.com/',
+];
 const styleSrcUrls = [
   'https://cdn.jsdelivr.net',
   'https://kit-free.fontawesome.com/',
@@ -96,7 +101,13 @@ app.use(
       styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
       workerSrc: ["'self'", 'blob:', 'data:'],
       objectSrc: [],
-      imgSrc: ["'self'", 'blob:', 'data:', 'https://images.unsplash.com', 'https://res.cloudinary.com/elykkyle/'],
+      imgSrc: [
+        "'self'",
+        'blob:',
+        'data:',
+        'https://images.unsplash.com',
+        'https://res.cloudinary.com/elykkyle/',
+      ],
       fontSrc: [],
     },
   })
@@ -131,7 +142,7 @@ main()
   .then(() => {
     console.log('MONGO CONNECTION OPEN!');
   })
-  .catch((err) => {
+  .catch(err => {
     console.log('ERROR CONNECTING TO MONGO');
     console.log(err);
   });
@@ -141,6 +152,9 @@ async function main() {
   // await mongoose.connect(dbUrl);
 }
 
+app.get('/index.html', (req, res) => {
+  res.render('home');
+});
 app.get('/', (req, res) => {
   res.render('home');
 });
