@@ -31,7 +31,19 @@
 <% } %> <% if(pageInfo.totalPages > 1) {%>
 <nav aria-label="campground index navigation">
   <ul class="pagination justify-content-center">
-    <% for ( let i = 1; i <= pageInfo.totalPages; i++ ) { %> <% if (
+    <% if (pageInfo.hasPrevPage) {%>
+    <li class="page-item">
+      <a class="page-link" href="campgrounds?page=<%- pageInfo.prevPage %>"
+        >Previous</a
+      >
+    </li>
+    <% } else { %>
+    <li class="page-item disabled">
+      <a class="page-link" href="campgrounds?page=<%- pageInfo.prevPage %>"
+        >Previous</a
+      >
+    </li>
+    <% } %> <% for ( let i = 1; i <= pageInfo.totalPages; i++ ) { %> <% if (
     pageInfo.page === i) { %>
     <li class="page-item active" aria-current="page" tabindex="-1">
       <span class="page-link"><%- i %></span>
@@ -40,10 +52,19 @@
     <li class="page-item">
       <a href="campgrounds?page=<%- i %>" class="page-link"><%- i %></a>
     </li>
-    <% } %> <% } %>
+    <% }} %> <% if (pageInfo.hasNextPage) {%>
+    <li class="page-item">
+      <a class="page-link" href="campgrounds?page=<%- pageInfo.nextPage %>"
+        >Next</a
+      >
+    </li>
+    <% } else { %>
+    <li class="page-item disabled">
+      <span class="page-link">Next</span>
+    </li>
   </ul>
 </nav>
-<% } %>
+<% }} %>
 <script>
   const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
   const campgrounds = {features: <%- JSON.stringify(campgrounds) %>};
