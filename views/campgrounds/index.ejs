@@ -30,10 +30,10 @@
 </div>
 <% } %> <% if(pageInfo.totalPages > 1) {%>
 <nav aria-label="campground index navigation">
-  <ul class="pagination">
-    <% for(let i = 1; i <= pageInfo.totalPages; i++) { %> <% if(pageInfo.page
-    === i) { %>
-    <li class="page-item active" aria-current="page">
+  <ul class="pagination justify-content-center">
+    <% for ( let i = 1; i <= pageInfo.totalPages; i++ ) { %> <% if (
+    pageInfo.page === i) { %>
+    <li class="page-item active" aria-current="page" tabindex="-1">
       <span class="page-link"><%- i %></span>
     </li>
     <% } else { %>

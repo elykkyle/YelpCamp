@@ -3,15 +3,11 @@ const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const { cloudinary } = require('../cloudinary');
-const { PaginationParameters } = require('mongoose-paginate-v2');
 
-const options = {
-  page: 1,
-  limit: 10,
-};
+const options = { page: 1, limit: 10 };
 
 module.exports.index = async (req, res) => {
-  req.query ? (options.page = req.query.page) : '';
+  req.query.page ? (options.page = req.query.page) : '';
   const results = await Campground.paginate(
     {},
     options,
@@ -19,6 +15,7 @@ module.exports.index = async (req, res) => {
       return result;
     }
   );
+  // console.log(results);
   const campgrounds = results.docs;
   const pageInfo = {};
   pageInfo.totalDocs = results.totalDocs;
