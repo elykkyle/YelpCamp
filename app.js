@@ -17,6 +17,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const MongoStore = require('connect-mongo');
 const dbUrl = process.env.DB_URL;
+const morgan = require('morgan');
 
 const port = process.env.PORT;
 
@@ -116,6 +117,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
+app.use(morgan('dev'));
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -142,7 +144,7 @@ main()
   .then(() => {
     console.log('MONGO CONNECTION OPEN!');
   })
-  .catch(err => {
+  .catch((err) => {
     console.log('ERROR CONNECTING TO MONGO');
     console.log(err);
   });

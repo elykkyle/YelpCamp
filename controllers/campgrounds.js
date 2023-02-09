@@ -14,7 +14,7 @@ module.exports.index = async (req, res) => {
   // const campgrounds = await Campground.find({});
   const results = await Campground.paginate(
     {},
-    options,
+    ...new PaginationParameters(req).get(),
     function (err, result) {
       return result;
     }
