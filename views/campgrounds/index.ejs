@@ -29,15 +29,20 @@
   </div>
 </div>
 <% } %> <% if(pageInfo.totalPages > 1) {%>
-<div class="row">
-  <div class="btn-toolbar" role="toolbar" aria-label="page toolbar">
-    <div class="btn-group me-2" role="group">
-      <% for( let i = 1; i <= pageInfo.totalPages; i++ ) { %>
-      <button type="button" class="btn btn-primary"><%- i %></button>
-      <% } %>
-    </div>
-  </div>
-</div>
+<nav aria-label="campground index navigation">
+  <ul class="pagination">
+    <% for(let i = 1; i <= pageInfo.totalPages; i++) { %> <% if(pageInfo.page
+    === i) { %>
+    <li class="page-item active" aria-current="page">
+      <span class="page-link"><%- i %></span>
+    </li>
+    <% } else { %>
+    <li class="page-item">
+      <a href="campgrounds?page=<%- i %>" class="page-link"><%- i %></a>
+    </li>
+    <% } %> <% } %>
+  </ul>
+</nav>
 <% } %>
 <script>
   const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
