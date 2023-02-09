@@ -11,10 +11,10 @@ const options = {
 };
 
 module.exports.index = async (req, res) => {
-  // const campgrounds = await Campground.find({});
+  req.query ? (options.page = req.query.page) : '';
   const results = await Campground.paginate(
     {},
-    ...new PaginationParameters(req).get(),
+    options,
     function (err, result) {
       return result;
     }
