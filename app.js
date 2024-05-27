@@ -27,6 +27,8 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+mongoose.set('strictQuery', false)
+
 const secret = process.env.SECRET;
 
 const store = MongoStore.create({
