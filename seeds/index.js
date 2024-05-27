@@ -1,13 +1,16 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+
+const User = require('../models/user');
 const mongoose = require('mongoose');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
 const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
 const dbUrl = process.env.DB_URL;
-const kyle = process.env.KYLE;
+const myPass = process.env.MY_PASS
+
 
 main()
   .then(() => {
@@ -25,8 +28,11 @@ async function main() {
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
+  await User.deleteMany({});
   await Campground.deleteMany({});
   await Review.deleteMany({});
+  const kyle = new User({email: "kyle@example.org", username: "kyle"});
+  const registeredKyle = await User.register(kyle, myPass)
   for (let i = 0; i < 100; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 20) + 10;
@@ -62,6 +68,8 @@ const seedDB = async () => {
     await camp.save();
   }
 };
+
+
 
 seedDB().then(() => {
   console.log('DONE!!!');
